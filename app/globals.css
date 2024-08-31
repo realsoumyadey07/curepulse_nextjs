@@ -53,7 +53,7 @@
   }
 
   .sub-header {
-    @apply text-18-bold md:text-24-bold;
+    @apply text-white text-18-bold md:text-24-bold;
   }
 
   .container {
