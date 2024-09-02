@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import { createuser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
 import { RadioGroup } from "../ui/radio-group";
+import { GenderOptions } from "@/constants";
+import { RadioGroupItem } from "@radix-ui/react-radio-group";
+import { Label } from "../ui/label";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -83,8 +86,8 @@ const RegisterForm = ({ user }: { user: User }) => {
             placeholder="(555) 123 456"
           />
         </div>
-        <div className="flex flex-col gap-6 xl:flex-rox">
-        <CustomFormField
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
             name="birthDate"
@@ -95,19 +98,33 @@ const RegisterForm = ({ user }: { user: User }) => {
             control={form.control}
             name="gender"
             label="Gender"
-            renderSkeleton={(field)=>(
-               <FormControl>
-                    <RadioGroup className="flex h-11 gap-6 xl:justify-between"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    >
-
-                    </RadioGroup>
-               </FormControl>
+            renderSkeleton={(field) => (
+              <FormControl>
+                <RadioGroup className="flex h-11 gap-6 xl:justify-between"
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  {GenderOptions.map((option, i) => (
+                    <div key={i} className="radio-group">
+                      <RadioGroupItem
+                        value={option}
+                        id={option} />
+                      <Label className="cursor-pointer" htmlFor={option}>
+                        {option}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </FormControl>
             )}
           />
         </div>
         <div className="flex flex-col gap-6 xl:flex-rox">
+          <section className="space-y-6">
+            <div className="mb-9 space-y-">
+              <h2 className="sub-header">Medical Information</h2>
+            </div>
+          </section>
 
         </div>
         <div className="flex flex-col gap-6 xl:flex-rox">
