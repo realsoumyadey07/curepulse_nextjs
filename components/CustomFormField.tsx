@@ -16,6 +16,8 @@ import PhoneInput from "react-phone-number-input";
 import { E164Number } from "libphonenumber-js/core";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
 
 interface CustomProps {
   control: Control<any>;
@@ -33,7 +35,15 @@ interface CustomProps {
 }
 
 const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
-  const { fieldType, iconSrc, iconAlt, placeholder, showTimeSelect, dateFormat, renderSkeleton } = props;
+  const {
+    fieldType,
+    iconSrc,
+    iconAlt,
+    placeholder,
+    showTimeSelect,
+    dateFormat,
+    renderSkeleton,
+  } = props;
   switch (fieldType) {
     case FormFieldType.INPUT:
       return (
@@ -69,7 +79,6 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
-            
           />
         </FormControl>
       );
@@ -84,19 +93,43 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             className="ml-2"
           />
           <FormControl>
-            <DatePicker 
-            className="shad-input"
-            selected={field.value} 
-            onChange={(data)=> field.onChange(data)}
-            dateFormat={dateFormat?? "MM/dd/yyyy"}
-            showTimeSelect={showTimeSelect ?? false}
+            <DatePicker
+              className="shad-input"
+              selected={field.value}
+              onChange={(data) => field.onChange(data)}
+              dateFormat={dateFormat ?? "MM/dd/yyyy"}
+              showTimeSelect={showTimeSelect ?? false}
             />
           </FormControl>
         </div>
-      )
+      );
     case FormFieldType.SKELETON:
+      return renderSkeleton ? renderSkeleton(field) : null;
+    case FormFieldType.SELECT:
       return (
-        renderSkeleton ? renderSkeleton(field) : null
+        <FormControl>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FormControl>
+              <SelectTrigger className="shad-select-trigger">
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent className="shad-select-content">
+              {props.children}
+            </SelectContent>
+          </Select>
+        </FormControl>
+      );
+    case FormFieldType.TEXTAREA:
+      return (
+        <FormControl>
+          <Textarea
+          placeholder={placeholder}
+          {...field}
+          className="shad-textarea"
+          disabled={props.disabled}
+          />
+        </FormControl>
       )
     default:
       break;

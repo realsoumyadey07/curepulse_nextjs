@@ -11,9 +11,11 @@ import { useRouter } from "next/navigation";
 import { createuser } from "@/lib/actions/patient.actions";
 import { FormFieldType } from "./PatientForm";
 import { RadioGroup } from "../ui/radio-group";
-import { GenderOptions } from "@/constants";
+import { Doctors, GenderOptions } from "@/constants";
 import { RadioGroupItem } from "@radix-ui/react-radio-group";
 import { Label } from "../ui/label";
+import Image from "next/image";
+import { SelectItem } from "../ui/select";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -100,15 +102,14 @@ const RegisterForm = ({ user }: { user: User }) => {
             label="Gender"
             renderSkeleton={(field) => (
               <FormControl>
-                <RadioGroup className="flex h-11 gap-6 xl:justify-between"
+                <RadioGroup
+                  className="flex h-11 gap-6 xl:justify-between"
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   {GenderOptions.map((option, i) => (
                     <div key={i} className="radio-group">
-                      <RadioGroupItem
-                        value={option}
-                        id={option} />
+                      <RadioGroupItem value={option} id={option} />
                       <Label className="cursor-pointer" htmlFor={option}>
                         {option}
                       </Label>
@@ -119,20 +120,133 @@ const RegisterForm = ({ user }: { user: User }) => {
             )}
           />
         </div>
-        <div className="flex flex-col gap-6 xl:flex-rox">
-          <section className="space-y-6">
-            <div className="mb-9 space-y-">
-              <h2 className="sub-header">Medical Information</h2>
-            </div>
-          </section>
 
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="address"
+            label="Address"
+            placeholder="14th street, park street, Kolkata"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="address"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="occupation"
+            label="Occupation"
+            placeholder="Software Engineer"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="occupation"
+          />
         </div>
-        <div className="flex flex-col gap-6 xl:flex-rox">
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="emergencyCoantactName"
+            label="Emergencygency Coantact Name"
+            placeholder="Gardien's name"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="address"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.PHONE_INPUT}
+            control={form.control}
+            name="emergencyCoantactNumber"
+            label="Emergency phone number"
+            placeholder="(555) 123 456"
+          />
+        </div>
+        <section className="space-y-6">
+          <div className="mb-9 space-y-">
+            <h2 className="sub-header">Medical Information</h2>
+          </div>
+        </section>
+        <CustomFormField
+          fieldType={FormFieldType.SELECT}
+          control={form.control}
+          name="primaryPhysician"
+          label="Primary Physician"
+          placeholder="Select a physician"
+        >
+          {Doctors.map((doctor) => (
+            <SelectItem key={doctor.name} value={doctor.name}>
+              <div className="cursor-pointer items-center gap-2 flex">
+                <Image
+                  src={doctor.image}
+                  width={32}
+                  height={32}
+                  alt={doctor.name}
+                  className="rounded-full border border-dark-500"
+                />
+                <p>{doctor.name}</p>
+              </div>
+            </SelectItem>
+          ))}
+        </CustomFormField>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="insuranceProvider"
+            label="Insurance Provider"
+            placeholder="BlueCross BlueShield"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="address"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="insurancePolicyNumber"
+            label="Insurance Policy Number"
+            placeholder="ABCD123456789"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="occupation"
+          />
+        </div>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="allergies"
+            label="Allergies (if any)"
+            placeholder="Peanuts, Penicillin, Pollen"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="address"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="currentMedication"
+            label="Current medication (if any)"
+            placeholder="Ibuprofen 200mg, Paracetamol 500mg"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="occupation"
+          />
+        </div>
+        <div className="flex flex-col gap-6 xl:flex-row">
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="familyMedicalHistory"
+            label="Family Medical History"
+            placeholder="Mother had a migration, father had a knee pain"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="address"
+          />
+          <CustomFormField
+            fieldType={FormFieldType.TEXTAREA}
+            control={form.control}
+            name="pastMedicalHistory"
+            label="Past Medical History"
+            placeholder="Headech, diaria"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="occupation"
+          />
+        </div>
 
-        </div>
-        <div className="flex flex-col gap-6 xl:flex-rox">
-
-        </div>
         <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
