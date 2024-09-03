@@ -16,7 +16,7 @@ const FileUploader = ({files, onChange}: FileUploaderProps)=> {
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 
   return (
-    <div {...getRootProps()}>
+    <div {...getRootProps()} >
       <input {...getInputProps()} />
       {files && files?.length > 0 ? (
         <Image
@@ -27,7 +27,7 @@ const FileUploader = ({files, onChange}: FileUploaderProps)=> {
            className='max-h-[400px] overflow-hidden object-cover'
         />
       ): (
-        <>
+        <div className='flex flex-col items-center p-4 rounded-md border-dashed border-2 border-slate-700'>
         <Image
           src={"/assets/icons/upload.svg"}
           height={40}
@@ -45,7 +45,7 @@ const FileUploader = ({files, onChange}: FileUploaderProps)=> {
             SVG, PNG, JPG or Gif (max 800x400)
           </p>
         </div>
-        </>
+        </div>
       )}
       
     </div>
