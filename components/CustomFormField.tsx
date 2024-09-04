@@ -95,11 +95,12 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           />
           <FormControl>
             <DatePicker
-              className="shad-input"
+              className="shad-input w-full"
               selected={field.value}
               onChange={(data) => field.onChange(data)}
               dateFormat={dateFormat ?? "MM/dd/yyyy"}
               showTimeSelect={showTimeSelect ?? false}
+              placeholderText={placeholder}
             />
           </FormControl>
         </div>
