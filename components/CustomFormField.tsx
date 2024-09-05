@@ -111,8 +111,15 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
       return (
         <FormControl>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
+
             <FormControl>
               <SelectTrigger className="shad-select-trigger">
+                <Image
+                  src={"/assets/icons/search.png"}
+                  height={30}
+                  width={30}
+                  alt="search"
+                />
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
@@ -126,10 +133,10 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
       return (
         <FormControl>
           <Textarea
-          placeholder={placeholder}
-          {...field}
-          className="shad-textarea"
-          disabled={props.disabled}
+            placeholder={placeholder}
+            {...field}
+            className="shad-textarea"
+            disabled={props.disabled}
           />
         </FormControl>
       )
@@ -138,13 +145,13 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
         <FormControl>
           <div className="flex items-center gap-4">
             <Checkbox
-            id={props.name}
-            checked={field.value}
-            onCheckedChange={field.onChange}
+              id={props.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
             />
-            <label 
-            htmlFor={props.name} 
-            className="checkbox-label">
+            <label
+              htmlFor={props.name}
+              className="checkbox-label">
               {props.label}
             </label>
           </div>
