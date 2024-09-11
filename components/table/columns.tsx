@@ -1,17 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import StatCard from "../StatCard";
 import { formatDateTime } from "@/lib/utils";
 import { Doctors } from "@/constants";
@@ -42,7 +31,7 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-     const appointment = row.original;
+      const appointment = row.original;
       return (
         <div className="min-w-[115px]">
           <StatCard status={appointment.status} />
@@ -53,41 +42,57 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "schedule",
     header: "Appointment",
-    cell: ({row})=> (
-     <p className="text-14-regular min-w-[100px]">
-          {formatDateTime(row.original?.schedule).dateTime}
-     </p>
-    )
+    cell: ({ row }) => (
+      <p className="text-14-regular min-w-[100px]">
+        {formatDateTime(row.original?.schedule).dateTime}
+      </p>
+    ),
   },
   {
     accessorKey: "primaryPhysician",
-    header: () => 'Doctor',
+    header: () => "Doctor",
     cell: ({ row }) => {
-      const doctor = Doctors.find((doc)=> doc.name === row.original.primaryPhysician);
-      return <div className="flex items-center gap-3">
+      const doctor = Doctors.find(
+        (doc) => doc.name === row.original.primaryPhysician
+      );
+      return (
+        <div className="flex items-center gap-3">
           <Image
-               src={doctor?.image as string}
-               alt={doctor?.name as string}
-               width={32}
-               height={32}
-               className="size-8"
+            src={doctor?.image as string}
+            alt={doctor?.name as string}
+            width={32}
+            height={32}
+            className="size-8"
           />
-          <p>
-               Dr. {doctor?.name}
-          </p>
-      </div>;
+          <p>Dr. {doctor?.name}</p>
+        </div>
+      );
     },
   },
   {
     id: "actions",
-    header: ()=> <div className="pl-4">Actions</div>,
-    cell: ({ row }) => {
+    header: () => <div className="pl-4">Actions</div>,
+    cell: ({ row : {original: data}}) => {
       return (
         <div className="flex gap-1">
-          <AppointmentModal/>
+          <AppointmentModal
+            type="schedule"
+            patientId={data.patient?.$id}
+            userId={data?.userId}
+            appointmentId={data}
+            title="Schedule Appointment"
+            description="Please confirm the following details"
+          />
+          <AppointmentModal
+            type="cancel"
+            patientId={data.patient?.$id}
+            userId={data?.userId}
+            appointmentId={data}
+            title="Cancel Appointment"
+            description="Are you sure you want to cancel this appointment?"
+          />
         </div>
       );
     },
   },
 ];
-
