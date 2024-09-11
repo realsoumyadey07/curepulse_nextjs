@@ -158,7 +158,7 @@
   }
 
   .text-16-semibold {
-    @apply text-[16px] leading-[20px] font-semibold;
+    @apply text-white text-[16px] leading-[20px] font-semibold;
   }
 
   .text-16-regular {
@@ -255,11 +255,11 @@
   }
 
   .shad-otp-slot {
-    @apply text-36-bold justify-center flex border border-dark-500 rounded-lg size-16 gap-4 !important;
+    @apply text-36-bold text-white justify-center flex border border-dark-500 rounded-lg size-16 gap-4 !important;
   }
 
   .shad-alert-dialog {
-    @apply space-y-5 bg-dark-400 border-dark-500 outline-none !important;
+    @apply space-y-5 bg-dark-200 border-dark-400 outline-none !important;
   }
 
   .shad-sheet-content button {
