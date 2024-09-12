@@ -12,7 +12,7 @@ import SubmitButton from "../SubmitButton";
 import { Doctors } from "@/constants";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
-import { createAppointment } from "@/lib/actions/appointment.action";
+import { createAppointment, updateAppointment } from "@/lib/actions/appointment.action";
 import { Appointment } from "@/types/appwrite.types";
 
 const AppointmentForm = ({
@@ -26,7 +26,7 @@ const AppointmentForm = ({
   patientId: string;
   type: "create" | "cancel" | "schedule";
   appointment?: Appointment | undefined;
-  setOpen: (open: boolean)=> void;
+  setOpen?: (open: boolean)=> void;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -34,17 +34,15 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: "",
-      reason: "",
-      note: "",
-      schedule: new Date(),
-      cancellationReason: ""
+      primaryPhysician: appointment ? appointment.primaryPhysician : "",
+      reason: appointment ? appointment.reason : "",
+      note: appointment?.note || "",
+      schedule: appointment ? new Date(appointment.schedule) : new Date(),
+      cancellationReason: appointment?.cancellationReason || ""
     },
   });
 
-  const onSubmit = async(values: z.infer<typeof AppointmentFormValidation>)=> {
-    console.log("it's ok");
-    
+  const onSubmit = async(values: z.infer<typeof AppointmentFormValidation>)=> {    
     setIsLoading(true)
     let status;
     switch (type) {
@@ -52,17 +50,15 @@ const AppointmentForm = ({
           status = "scheduled"
           break;
      case 'cancel':
-          status = "canceled"
+          status = "cancelled"
           break;
      default:
           status = "pending"
           
     }
     try {
-     if(type === "create" && patientId){
-      console.log("hi there");
-      
-          const appointmentData = {
+     if(type === "create" && patientId){      
+          const appointment = {
                userId,
                patient: patientId,
                primaryPhysician: values.primaryPhysician,
@@ -71,11 +67,29 @@ const AppointmentForm = ({
                note: values.note,
                status: status as Status
           }
-          const appointment = await createAppointment(appointmentData);
-          if(appointment){
+          const newAppointment = await createAppointment(appointment);
+          if(newAppointment){
                form.reset();
-               router.push(`/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`)
+               router.push(`/patients/${userId}/new-appointment/success?appointmentId=${newAppointment.$id}`)
           }
+     }else {
+      const appointmentToUpdate = {
+        userId,
+        appointmentId: appointment?.$id!,
+        appointment: {
+          primaryPhysician: values.primaryPhysician,
+          schedule: new Date(values.schedule),
+          status: status as Status,
+          cancellationReason: values.cancellationReason
+        },
+        type
+      }
+
+      const updatedAppointment = await updateAppointment(appointmentToUpdate);
+      if(updatedAppointment){
+        setOpen && setOpen(false);
+        form.reset();
+      }
      }
     } catch (error) {
       console.log(error);

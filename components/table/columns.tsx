@@ -1,21 +1,16 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import StatCard from "../StatCard";
 import { formatDateTime } from "@/lib/utils";
 import { Doctors } from "@/constants";
 import Image from "next/image";
 import AppointmentModal from "../AppointmentModal";
+import { Appointment } from "@/types/appwrite.types";
+import StatusBadge from "../StatusBadge";
 
-export type Payment = {
-  patient: any;
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-};
 
-export const columns: ColumnDef<Payment>[] = [
+
+export const columns: ColumnDef<Appointment>[] = [
   {
     header: "ID",
     cell: ({ row }) => <p className="text-14-medium">{row.index + 1}</p>,
@@ -32,9 +27,10 @@ export const columns: ColumnDef<Payment>[] = [
     header: "Status",
     cell: ({ row }) => {
       const appointment = row.original;
+      console.log(appointment);
       return (
         <div className="min-w-[115px]">
-          <StatCard status={appointment.status} />
+          <StatusBadge status={appointment.status} />
         </div>
       );
     },
@@ -79,7 +75,7 @@ export const columns: ColumnDef<Payment>[] = [
             type="schedule"
             patientId={data.patient?.$id}
             userId={data?.userId}
-            appointmentId={data}
+            appointment={data}
             title="Schedule Appointment"
             description="Please confirm the following details"
           />
@@ -87,7 +83,7 @@ export const columns: ColumnDef<Payment>[] = [
             type="cancel"
             patientId={data.patient?.$id}
             userId={data?.userId}
-            appointmentId={data}
+            appointment={data}
             title="Cancel Appointment"
             description="Are you sure you want to cancel this appointment?"
           />
